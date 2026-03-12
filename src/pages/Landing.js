@@ -22,7 +22,7 @@ import React, { useState, useEffect } from "react";
 //     }
 // }
 
-// 
+//
 // (async function(){
 //   const url = 'https://spotify-audio-features-track-analysis.p.rapidapi.com/tracks/spotify_audio_features?spotify_track_id=6ho0GyrWZN3mhi9zVRW7xi&isrc=CA5KR1821202';
 //   const options = {
@@ -31,7 +31,7 @@ import React, { useState, useEffect } from "react";
 // 		'x-rapidapi-key': '8e9074276emsh223ef54cf19b760p19a968jsn3a988955cdbc',
 // 		'x-rapidapi-host': 'spotify-audio-features-track-analysis.p.rapidapi.com'
 // 	}
-// }; 
+// };
 
 // let data = await fetch(url, options)
 //         .then((response)=> response.json())
@@ -59,93 +59,104 @@ import React, { useState, useEffect } from "react";
 //   },
 // };
 
-
-
-
-
-
 function Home() {
-
   const [trackData, setTrackData] = useState(null);
-
   const [loading, setLoading] = useState(true);
 
-async function fetchTrack() {
-  // 1. Get audio features (already contains spotify_track_id)
-  const response = await axios.request({
-    method: 'GET',
-    url: 'https://spotify-audio-features-track-analysis.p.rapidapi.com/tracks/spotify_audio_features',
-    
-    headers: {
-      'x-rapidapi-key': '8e9074276emsh223ef54cf19b760p19a968jsn3a988955cdbc',
-      'x-rapidapi-host': 'spotify-audio-features-track-analysis.p.rapidapi.com',
-    },
-  });
+  async function fetchTrack() {
+    try {
+      const response = await axios.request({
+        method: "GET",
+        url: "https://spotify-audio-features-track-analysis.p.rapidapi.com/tracks/spotify_audio_features?spotify_track_id=6ho0GyrWZN3mhi9zVRW7xi&isrc=CA5KR1821202",
+        headers: {
+          "x-rapidapi-key":
+            "8e9074276emsh223ef54cf19b760p19a968jsn3a988955cdbc",
+          "x-rapidapi-host":
+            "spotify-audio-features-track-analysis.p.rapidapi.com",
+        },
+      });
 
-  const trackIdToFetch = response.data.spotify_track_id; // "6ho0GyrWZN3mhi9zVRW7xi"
+      const trackIdToFetch = response.data.spotify_track_id; //6ho0GyrWZN3mhi9zVRW7xi
 
-  // 2. Use that ID to get the album art
-  const oEmbedURL = `https://open.spotify.com/oembed?url=spotify:track:${trackIdToFetch}`;
-const oEmbedResponse = await axios.get(oEmbedURL);
+      const oEmbedURL = `https://open.spotify.com/oembed?url=spotify:track:${trackIdToFetch}`;
+      const oEmbedResponse = await axios.get(oEmbedURL);
 
-setTrackData({
-  id: trackIdToFetch,
-  name: oEmbedResponse.data.title,
-  image: oEmbedResponse.data.thumbnail_url, // This is the image URL
-  //features: featureResponse.data,
-});
-  console.log(setTrackData)
-}
+      setTrackData({
+        id: trackIdToFetch,
+        name: oEmbedResponse.data.title,
+        image: oEmbedResponse.data.thumbnail_url,
+      });
+    } catch (error) {
+      console.error("Failed to fetch track:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchTrack();
+  }, []);
 
   return (
     <div className="landing-wrapper">
-      {/* Row 1: left = dark, right = green */}
       <div className="row g-0 landing-row gradient-bg">
-        {/* <div className="col-6 dark-side"></div> */}
         <div className="col-6 ">
-          <div style={{ padding: "15%" , marginTop:"10%", marginBottom:"10%"}}>
+          <div
+            style={{ padding: "15%", marginTop: "10%", marginBottom: "10%" }}
+          >
             Welcome! This platform lets you dive deeper into the music you love
             by exploring detailed audio features from Spotify tracks. Discover
             insights like dance ability, energy, tempo, and more to understand
             what makes each song unique. Whether you're analyzing a favorite
             track or comparing different songs, this site transforms Spotify's
-            audio data into clear and engaging statistics. 🎧📊
+            audio data into clear and engaging statistics. 
             <br></br>
             <br></br>
             <button className="button">Go to Comparison Page</button>
           </div>
         </div>
         <div className="col-6 d-flex justify-content-center align-items-center">
-  <div className="track-image-container" style={{ padding: "5%" }}>
-    {loading ? (
-      <p>Loading...</p>
-    ) : (
-      trackData?.image && (
-        <img 
-          src={trackData.image} 
-          alt={trackData.name} 
-          width={300} 
-          className="track-image" 
-        />
-      )
-    )}
-  </div>
-</div>
+          <div className="track-image-container">
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              trackData?.image && (
+                <img
+                  src={trackData.image}
+                  alt={trackData.name}
+                  width={400}
+                  className="track-image"
+                />
+              )
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Row 2: left = white, right = white */}
       <div className="row g-0 landing-row">
-        <div className="col-6" style={{ padding: "5%" }}>
-          
+        <div className="col-6 d-flex justify-content-center align-items-center">
+          <div className="track-image-container" >
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              trackData?.image && (
+                <img
+                  src={trackData.image}
+                  alt={trackData.name}
+                  width={400}
+                  className="track-image"
+                />
+              )
+            )}
+          </div>
         </div>
         <div className="col-6 ">
-          <div style={{ padding: "15%" , marginTop:"10%", marginBottom:"10%"}}>
-            Welcome! This platform lets you dive deeper into the music you love
-            by exploring detailed audio features from Spotify tracks. Discover
-            insights like dance ability, energy, tempo, and more to understand
-            what makes each song unique. Whether you're analyzing a favorite
-            track or comparing different songs, this site transforms Spotify's
-            audio data into clear and engaging statistics. 🎧📊
+          <div
+            style={{ padding: "15%", marginTop: "10%", marginBottom: "10%" }}
+          >
+            Look at how different artists developed over the years and see how their palette has changed 
+            by seeing how each song compares to each other in dance ability, energy, tempo, and more to see 
+            how each artist has developed.
             <br></br>
             <br></br>
             <button className="button">Go to Timeline Page</button>
@@ -190,7 +201,7 @@ export default Home;
 //           </div>
 //         </div>
 //       </div>
-      
+
 //         <div className="row" style={{ padding: "5%" }}>
 //           <div className="col">
 //             Welcome! This platform lets you dive deeper into the music you love
@@ -214,7 +225,7 @@ export default Home;
 //             </button>
 //           </div>
 //         </div>
-      
+
 //       </div>
 // );
 // }

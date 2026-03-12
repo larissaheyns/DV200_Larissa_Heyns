@@ -34,12 +34,12 @@ function MyNavigation() {
         </Container>
       </Navbar>
 
-      {/* Routes OUTSIDE Nav, but still inside BrowserRouter /}*/}
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/compare" element={<Compare />} />
         <Route path="/timeline" element={<Timeline />} /> 
-        {/* {/ Fixed: <Timeline /> not Timeline  */}
+        
       </Routes>
     </BrowserRouter>
   );
