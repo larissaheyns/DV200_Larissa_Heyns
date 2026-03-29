@@ -48,6 +48,7 @@
 }
 
 .navbar a{
+
   padding-right: 10%;
   color: rgb(255, 255, 255);
   font-weight: 500;
@@ -100,8 +101,14 @@
 }
 
 .gradient-bg {
-  background: linear-gradient(#1db954, #12883b);
+  background: linear-gradient(#1db954, #0a4e22);
   border-bottom-right-radius: 100px;
+  color: white;
+  font-weight: 450;
+}
+
+.gradient {
+  background: linear-gradient(#1db954, #0a4e22);
   color: white;
 }
 

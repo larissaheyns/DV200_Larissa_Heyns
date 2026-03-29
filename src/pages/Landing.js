@@ -1,101 +1,69 @@
-import "../App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { fetchTrackData } from "../components/api";
+import { useNavigate } from "react-router-dom";
 
-// class Song{
-//     constructor(spotify_track_id,acousticness,danceability,duration,energy,instrumentalness,key,liveness,loudness,mode,speechiness,tempo,time_signature,valence){
-//         this.spotify_track_id = spotify_track_id;
-//         this.acousticness=acousticness;
-//         this.danceability=danceability;
-//         this.duration=duration;
-//         this.energy=energy;
-//         this.instrumentalness=instrumentalness;
-//         this.key=key;
-//         this.liveness=liveness;
-//         this.loudness=loudness;
-//         this.mode=mode;
-//         this.speechiness=speechiness;
-//         this.tempo=tempo;
-//         this.time_signature=time_signature;
-//         this.valence=valence;
-//     }
-// }
+const previewSongs = [
+  { id: 1, title: "Bohemian Rhapsody", artist: "Queen", trackID: "3z8h0TU7ReDPLIbEnYhWZb" },
+  { id: 2, title: "Hotel California", artist: "Eagles", trackID: "40riOy7x9W7GXjyGp4pjAv" },
+  { id: 3, title: "Stairway to Heaven", artist: "Led Zeppelin", trackID: "5CQ30WqJwcep0pYcV4AMNc" },
+  { id: 4, title: "I Miss You", artist: "blink-182", trackID: "1AdYZ6X00nXmO613Y7GJOl" },
+  { id: 5, title: "Mr.Brightside", artist: "The Killers", trackID: "003vvx7Niy0yvhvHt4a68B" },
+  { id: 6, title: "Fire Fire", artist: "Flyleaf", trackID: "6SOzNLaZF6gHGgh7qU56hE" },
+  { id: 7, title: "Complicated", artist: "Avril Lavigne", trackID: "5xEM5hIgJ1jjgcEBfpkt2F" },
+  { id: 8, title: "Scotty Doesn't Know", artist: "Eagles", trackID: "1LkoYGxmYpO6QSEvY5C0Zl" },
+  { id: 9, title: "Party In The U.S.A", artist: "Miley Cyrus", trackID: "5Q0Nhxo0l2bP3pNjpGJwV1" },
+  { id: 10, title: "Shape of You", artist: "Ed Sheeran", trackID: "7qiZfU4dY1lWllzX7mPBI3" },
+  { id: 11, title: "Safe And Sound", artist: "Capital Cities", trackID: "6Z8R6UsFuGXGtiIxiD8ISb" },
+  { id: 12, title: "Wonderwall", artist: "Oasis", trackID: "7ygpwy2qP3NbrxVkHvUhXY" },
+  { id: 13, title: "Thunder", artist: "Imagine Dragons", trackID: "1zB4vmk8tFRmM9UULNzbLB" },
+  { id: 14, title: "Payphone", artist: "Maroon 5, Wiz Kalifa", trackID: "1XGmzt0PVuFgQYYnV2It7A" },
+  { id: 15, title: "Attention", artist: "Charlie Puth", trackID: "5cF0dROlMOK5uNZtivgu50" },
+  { id: 16, title: "Hot N Cold", artist: "Katy Perry", trackID: "1TEjSXPdAakDotj2Wji3PU" },
+  { id: 17, title: "Wake Me Up", artist: "Avicii", trackID: "0nrRP2bk19rLc0orkWPQk2" },
+  { id: 18, title: "Some Nights", artist: "fun.", trackID: "67WTwafOMgegV6ABnBQxcE" },
+  { id: 19, title: "Call Me Maybe", artist: "Carly Rae Jepsen", trackID: "20I6sIOMTCkB6w7ryavxtO" },
+  { id: 20, title: "What Makes You Beautiful", artist: "One Direction", trackID: "4cluDES4hQEUhmXj6TXkSo" },
+  { id: 21, title: "Every Breath You Take", artist: "The Police", trackID: "1JSTJqkT5qHq8MDJnJbRE1" },
+  { id: 22, title: "Life is a Highway", artist: "Rascal Flatts", trackID: "1SLikaDhWhhhnLJC58bkFI" },
+  { id: 23, title: "Walk of Life", artist: "Dire Straits", trackID: "6HMFtoMvv6n6Q2eOyPFyne" },
+  { id: 24, title: "Sweet Child O' Mine", artist: "Guns N' Roses", trackID: "7snQQk1zcKl8gZ92AnueZW" },
+];
 
-//
-// (async function(){
-//   const url = 'https://spotify-audio-features-track-analysis.p.rapidapi.com/tracks/spotify_audio_features?spotify_track_id=6ho0GyrWZN3mhi9zVRW7xi&isrc=CA5KR1821202';
-//   const options = {
-// 	method: 'GET',
-// 	headers: {
-// 		'x-rapidapi-key': '8e9074276emsh223ef54cf19b760p19a968jsn3a988955cdbc',
-// 		'x-rapidapi-host': 'spotify-audio-features-track-analysis.p.rapidapi.com'
-// 	}
-// };
+export default function Home() {
+  const [images, setImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const navigate = useNavigate();
 
-// let data = await fetch(url, options)
-//         .then((response)=> response.json())
-//         .then((result) => {return result})
-//         .catch((error)=> console.error(error));
-
-//         console.log(data);
-
-//  let trackID = data.spotify_track_id;
-// const url = `https://open.spotify.com/oembed?url=https://open.spotify.com/track/${trackID}`;
-
-// })();
-
-//const spotify_TOKEN = process.env.REACT_APP_PANDASCORE_TOKEN;
-
-// const options = {
-//   method: 'GET',
-//   url: 'https://spotify-audio-features-track-analysis.p.rapidapi.com/tracks/spotify_audio_features',
-//   params: {
-//     spotify_track_id: '6ho0GyrWZN3mhi9zVRW7xi', // your track ID here
-//   },
-//   headers: {
-//     'x-rapidapi-key': '8e9074276emsh223ef54cf19b760p19a968jsn3a988955cdbc',
-//     'x-rapidapi-host': 'spotify-audio-features-track-analysis.p.rapidapi.com',
-//   },
-// };
-
-function Home() {
-  const [trackData, setTrackData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  async function fetchTrack() {
-    try {
-      const response = await axios.request({
-        method: "GET",
-        url: "https://spotify-audio-features-track-analysis.p.rapidapi.com/tracks/spotify_audio_features?spotify_track_id=6ho0GyrWZN3mhi9zVRW7xi&isrc=CA5KR1821202",
-        headers: {
-          "x-rapidapi-key":
-            "8e9074276emsh223ef54cf19b760p19a968jsn3a988955cdbc",
-          "x-rapidapi-host":
-            "spotify-audio-features-track-analysis.p.rapidapi.com",
-        },
-      });
-
-      const trackIdToFetch = response.data.spotify_track_id; //6ho0GyrWZN3mhi9zVRW7xi
-
-      const oEmbedURL = `https://open.spotify.com/oembed?url=spotify:track:${trackIdToFetch}`;
-      const oEmbedResponse = await axios.get(oEmbedURL);
-
-      setTrackData({
-        id: trackIdToFetch,
-        name: oEmbedResponse.data.title,
-        image: oEmbedResponse.data.thumbnail_url,
-      });
-    } catch (error) {
-      console.error("Failed to fetch track:", error);
-    } finally {
-      setLoading(false);
+ useEffect(() => {
+  async function loadImages() {
+    const results = [];
+    for (const song of previewSongs) {
+      try {
+        const data = await fetchTrackData(song.trackID);
+        results.push(data);
+        setImages([...results]); // update as each one loads
+        await new Promise(res => setTimeout(res, 1000)); // wait 1 second between requests
+      } catch (error) {
+        console.error("Failed to load image for", song.title, error);
+      }
     }
   }
+  loadImages();
+}, []);
 
   useEffect(() => {
-    fetchTrack();
-  }, []);
+  if (images.length === 0) return;
+  const interval = setInterval(() => {
+    setVisible(false);
+    setTimeout(() => {
+      setCurrentIndex(prev => (prev + 1) % images.length);
+      setVisible(true);
+    }, 500);
+  }, 3000);
+  return () => clearInterval(interval);
+}, [images.length])
+ 
 
   return (
     <div className="landing-wrapper">
@@ -112,30 +80,44 @@ function Home() {
             audio data into clear and engaging statistics. 
             <br></br>
             <br></br>
-            <button className="button">Go to Comparison Page</button>
+            <button
+            onClick={() => navigate("/compare")}
+            style={{
+              marginTop: 24,
+              padding: "12px 28px",
+              background: "#1ED760",
+              border: "none",
+              borderRadius: 10,
+              fontSize: 16,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Go to Comparison Page
+          </button>
           </div>
         </div>
         <div className="col-6 d-flex justify-content-center align-items-center">
-          <div className="track-image-container">
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              trackData?.image && (
-                <img
-                  src={trackData.image}
-                  alt={trackData.name}
-                  width={400}
-                  className="track-image"
-                />
-              )
-            )}
-          </div>
+          {images.length > 0 && (
+    <img
+      src={images[currentIndex].image}
+      alt={images[currentIndex].name}
+      style={{
+        width: 500,
+        height: 500,
+        borderRadius: 16,
+        objectFit: "cover",
+        opacity: visible ? 1 : 0,   
+        transition: "opacity 0.5s ease-in-out",
+      }}
+    />
+  )}
         </div>
       </div>
 
       <div className="row g-0 landing-row">
         <div className="col-6 d-flex justify-content-center align-items-center">
-          <div className="track-image-container" >
+          {/* <div className="track-image-container" >
             {loading ? (
               <p>Loading...</p>
             ) : (
@@ -148,7 +130,7 @@ function Home() {
                 />
               )
             )}
-          </div>
+          </div> */}
         </div>
         <div className="col-6 ">
           <div
@@ -159,75 +141,24 @@ function Home() {
             how each artist has developed.
             <br></br>
             <br></br>
-            <button className="button">Go to Timeline Page</button>
+            <button
+            onClick={() => navigate("/timeline")}
+            style={{
+              marginTop: 24,
+              padding: "12px 28px",
+              background: "#1ED760",
+              border: "none",
+              borderRadius: 10,
+              fontSize: 16,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Go to Timeline Page
+          </button>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default Home;
-
-// import "../App.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
-
-// function Home(){
-// return(
-//     <div>
-//         <br></br>
-//     <div className="gradient-bg">
-//         <div className="row" style={{ padding: "5%" }}>
-//           <div className="col">
-//             Welcome! This platform lets you dive deeper into the music you love
-//             by exploring detailed audio features from Spotify tracks. Discover
-//             insights like dance ability, energy, tempo, and more to understand
-//             what makes each song unique. Whether you're analyzing a favorite
-//             track or comparing different songs, this site transforms Spotify’s
-//             audio data into clear and engaging statistics. 🎧📊
-//             <hr></hr>
-//             <button className="button" href="#comparison">
-//               Go to Comparison Page
-//             </button>
-//           </div>
-
-//           <div className="col">
-//             Welcome! This platform lets you dive deeper into the music you love
-//             by exploring detailed audio features from Spotify tracks. Discover
-//             insights like dance ability, energy, tempo, and more to understand
-//             what makes each song unique. Whether you're analyzing a favorite
-//             track or comparing different songs, this site transforms Spotify’s
-//             audio data into clear and engaging statistics. 🎧📊
-//           </div>
-//         </div>
-//       </div>
-
-//         <div className="row" style={{ padding: "5%" }}>
-//           <div className="col">
-//             Welcome! This platform lets you dive deeper into the music you love
-//             by exploring detailed audio features from Spotify tracks. Discover
-//             insights like dance ability, energy, tempo, and more to understand
-//             what makes each song unique. Whether you're analyzing a favorite
-//             track or comparing different songs, this site transforms Spotify’s
-//             audio data into clear and engaging statistics. 🎧📊
-//           </div>
-
-//           <div className="col">
-//             Welcome! This platform lets you dive deeper into the music you love
-//             by exploring detailed audio features from Spotify tracks. Discover
-//             insights like dance ability, energy, tempo, and more to understand
-//             what makes each song unique. Whether you're analyzing a favorite
-//             track or comparing different songs, this site transforms Spotify’s
-//             audio data into clear and engaging statistics. 🎧📊
-//             <hr></hr>
-//             <button className="button" href="#comparison">
-//               Go to Timeline Page
-//             </button>
-//           </div>
-//         </div>
-
-//       </div>
-// );
-// }
-
-// export default Home;
