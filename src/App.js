@@ -1,20 +1,24 @@
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MyNavigation from "./components/navigation";
 import TheFooter from "./components/pageFooter";
-
+import Home from "./pages/Landing";
+import Compare from "./pages/Compare";
+import Timeline from "./pages/Timeline";
 
 
 function App() {
   return (
-    <div>
-     
-    <MyNavigation />      
-      
+   <BrowserRouter>
+      <MyNavigation />
 
-     <TheFooter />
-    </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/compare" element={<Compare />} />
+        <Route path="/timeline" element={<Timeline />} />
+      </Routes>
+
+      <TheFooter />
+    </BrowserRouter>
   );
 }
 

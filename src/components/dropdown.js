@@ -31,12 +31,11 @@ export default function SongDropdown({ onSelect }) {  // ← accept onSelect pro
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  // no trackData, no loading, no fetchTrackData here anymore
 
   function handleSelect(song) {
     setSelected(song);
     setOpen(false);
-    onSelect(song);  // ← pass the song up to Compare.js
+    onSelect(song);  
   }
 
   return (

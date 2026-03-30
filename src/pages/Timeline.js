@@ -16,8 +16,8 @@ export default function Timeline() {
     for (const song of artist.songs) {
       try {
         const data = await fetchTrackData(song.trackID);
-        setTrackDataMap(prev => ({ ...prev, [song.trackID]: data }));
-        await new Promise(res => setTimeout(res, 1000)); // avoid rate limit
+        setTrackDataMap((prev) => ({ ...prev, [song.trackID]: data }));
+        await new Promise((res) => setTimeout(res, 1000)); // avoid rate limit
       } catch (error) {
         console.error("Failed to fetch", song.title, error);
       }
@@ -26,14 +26,20 @@ export default function Timeline() {
   }
 
   return (
-    <section className="gradient" style={{ minHeight: "100vh", padding: "5% 8%" }}>
+    <section
+      className="gradient"
+      style={{ minHeight: "100vh", padding: "5% 8%" }}
+    >
       <h1 style={{ textAlign: "center", color: "white" }}>Artist Timeline</h1>
-        <h3 style={{ textAlign: "center" }}>Choose on of the artists and see how they have developed over the years</h3>
+      <h3 style={{ textAlign: "center" }}>
+        Choose one of the artists and see how they have developed over the years
+      </h3>
       <ArtistDropdown onSelect={handleArtistSelect} />
 
       {loading && (
         <p style={{ color: "white", marginTop: 16 }}>
-          Loading songs... {Object.keys(trackDataMap).length}/{selectedArtist?.songs.length}
+          Loading songs... {Object.keys(trackDataMap).length}/
+          {selectedArtist?.songs.length}
         </p>
       )}
 
@@ -44,4 +50,3 @@ export default function Timeline() {
     </section>
   );
 }
-

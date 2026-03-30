@@ -12,7 +12,7 @@ export async function fetchTrackData(trackID) {
 
   const features = response.data.audio_features;
   const oEmbedResponse = await axios.get(
-    `https://open.spotify.com/oembed?url=spotify:track:${trackID}`
+    `https://open.spotify.com/oembed?url=spotify:track:${trackID}`,
   );
 
   return {
