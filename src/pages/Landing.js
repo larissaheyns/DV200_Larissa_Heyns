@@ -67,6 +67,7 @@ export default function Home() {
                 className="cover-img"
                 src={current.image}
                 alt={current.title}
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = current.fallbackImage; }}
                 style={{ opacity: visible ? 1 : 0, transform: visible ? "scale(1)" : "scale(1.03)" }}
               />
               <div className="cover-meta" style={{ opacity: visible ? 1 : 0 }}>

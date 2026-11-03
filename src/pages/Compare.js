@@ -37,7 +37,7 @@ function TrackPanel({ label }) {
         {trackData && !loading && (
           <div style={{ marginTop: 22 }}>
             <div className="track-head">
-              <img src={trackData.image} alt={trackData.title} />
+              <img src={trackData.image} alt={trackData.title} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = trackData.fallbackImage; }} />
               <div>
                 <h2>{trackData.title}</h2>
                 <p>{trackData.artist}</p>

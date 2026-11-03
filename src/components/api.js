@@ -1,11 +1,10 @@
 import { trackLibrary } from "../data/tracks";
 
-// Generates a unique gradient "album cover" so we don't depend on Spotify's
-// image servers. Swap `image` for a real URL in tracks.js if you ever want to.
+// Fallback cover: a unique gradient generated per song.
 function coverArt(title, artist) {
   let hash = 0;
   for (const ch of title + artist) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-  const hue = 95 + (hash % 90); // greens -> teals
+  const hue = 95 + (hash % 90);
   const hue2 = (hue + 40 + (hash % 50)) % 360;
   const initials = title
     .split(/\s+/)
@@ -24,14 +23,43 @@ function coverArt(title, artist) {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-// Same name and return shape as the old API call, so pages don't need changing.
+// Real album covers come from Spotify's public oEmbed endpoint (no API key
+// needed). Results are cached, and if a lookup fails we use the generated cover.
+const coverCache = {};
+
+async function fetchRealCover(trackID) {
+  if (coverCache[trackID] !== undefined) return coverCache[trackID];
+  // local-only IDs (not real Spotify IDs) can't be looked up
+  if (!/^[A-Za-z0-9]{22}$/.test(trackID)) return (coverCache[trackID] = null);
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    const res = await fetch(
+      `https://open.spotify.com/oembed?url=spotify:track:${trackID}`,
+      { signal: controller.signal },
+    );
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(res.status);
+    const json = await res.json();
+    return (coverCache[trackID] = json.thumbnail_url || null);
+  } catch {
+    return (coverCache[trackID] = null);
+  }
+}
+
 export async function fetchTrackData(trackID) {
   const track = trackLibrary[trackID];
   if (!track) throw new Error(`No local data for track ${trackID}`);
 
+  const fallback = coverArt(track.title, track.artist);
+  const real = track.image || (await fetchRealCover(trackID));
+
   return {
     ...track,
+    trackID,
     name: `${track.title} - ${track.artist}`,
-    image: track.image || coverArt(track.title, track.artist),
+    image: real || fallback,
+    fallbackImage: fallback,
   };
 }
