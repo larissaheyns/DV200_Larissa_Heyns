@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Carousel from "react-bootstrap/Carousel";
 import { fetchTrackData } from "../components/api";
 import { compareSongs } from "../data/tracks";
 import GlowCard from "../components/GlowCard";
+import ArtistShowcase from "../components/ArtistShowcase";
 import edSheeran from "../ed_sheeran.jpg";
 import billieEilish from "../billie_eilish.jpg";
 import coldplay from "../coldplay.jpg";
+
+const showcaseArtists = [
+  { name: "Ed Sheeran", image: edSheeran, note: "2011 – 2021 · from The A Team to Bad Habits" },
+  { name: "Billie Eilish", image: billieEilish, note: "2016 – 2023 · from Ocean Eyes to What Was I Made For" },
+  { name: "Coldplay", image: coldplay, note: "2000 – 2021 · from Yellow to My Universe" },
+];
 
 export default function Home() {
   const [tracks, setTracks] = useState([]);
@@ -83,22 +89,7 @@ export default function Home() {
       </section>
 
       <section className="section-split">
-        <GlowCard className="no-pad">
-          <Carousel className="artist-carousel" indicators={false}>
-            <Carousel.Item>
-              <img src={edSheeran} alt="Ed Sheeran" />
-              <Carousel.Caption><h5>Ed Sheeran</h5></Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img src={billieEilish} alt="Billie Eilish" />
-              <Carousel.Caption><h5>Billie Eilish</h5></Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img src={coldplay} alt="Coldplay" />
-              <Carousel.Caption><h5>Coldplay</h5></Carousel.Caption>
-            </Carousel.Item>
-          </Carousel>
-        </GlowCard>
+        <ArtistShowcase items={showcaseArtists} />
 
         <div>
           <span className="eyebrow">Artist timelines</span>
