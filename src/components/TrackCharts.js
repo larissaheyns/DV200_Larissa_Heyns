@@ -9,6 +9,8 @@ import {
   Legend,
 } from "chart.js";
 import { PolarArea, Bar, Pie } from "react-chartjs-2";
+import GlowCard from "./GlowCard";
+import { gridColor, palette } from "./chartTheme";
 
 ChartJS.register(
   RadialLinearScale,
@@ -20,57 +22,33 @@ ChartJS.register(
   Legend,
 );
 
-const cardStyle = {
-  background: "rgba(0, 0, 0, 0.4)",
-  borderRadius: 16,
-  padding: "20px",
-};
-
-const colors = [
-  "rgba(255, 99, 132, 0.85)",
-  "rgba(54, 200, 235, 0.85)",
-  "rgba(255, 206, 86, 0.85)",
-  "rgba(120, 220, 140, 0.85)",
-  "rgba(180, 120, 255, 0.85)",
-  "rgba(255, 160, 64, 0.85)",
-  "rgba(100, 180, 255, 0.85)",
-];
+const border = "rgba(2, 12, 4, 0.9)";
 
 export default function TrackCharts({ trackData }) {
   if (!trackData) return null;
 
-  const options = {
-    plugins: {
-      legend: { labels: { color: "white", font: { size: 13 } } },
+  const legendBottom = {
+    legend: { position: "bottom", labels: { usePointStyle: true, padding: 14 } },
+  };
+
+  const polarOptions = {
+    plugins: legendBottom,
+    scales: {
+      r: {
+        ticks: { backdropColor: "transparent", color: "#9ec79b" },
+        grid: { color: gridColor },
+        angleLines: { color: gridColor },
+      },
     },
   };
 
   const barOptions = {
-    plugins: {
-      legend: { display: false },
-    },
+    plugins: { legend: { display: false } },
     scales: {
-      x: {
-        ticks: { color: "white" },
-        grid: { color: "rgba(255,255,255,0.1)" },
-      },
-      y: {
-        ticks: { color: "white" },
-        grid: { color: "rgba(255,255,255,0.1)" },
-        min: 0,
-        max: 1,
-      },
+      x: { grid: { display: false } },
+      y: { grid: { color: gridColor }, min: 0, max: 1 },
     },
-  };
-
-  const polarOptions = {
-    ...options,
-    scales: {
-      r: {
-        ticks: { color: "white", backdropColor: "transparent" },
-        grid: { color: "rgba(255,255,255,0.2)" },
-      },
-    },
+    borderRadius: 8,
   };
 
   const rhythmData = {
@@ -83,9 +61,9 @@ export default function TrackCharts({ trackData }) {
           trackData.tempo / 200,
           trackData.liveness,
         ],
-        backgroundColor: [colors[1], colors[2], colors[3], colors[4]],
-        borderColor: "rgba(255,255,255,0.6)",
-        borderWidth: 1.5,
+        backgroundColor: [palette[1], palette[3], palette[0], palette[4]],
+        borderColor: border,
+        borderWidth: 2,
       },
     ],
   };
@@ -100,9 +78,9 @@ export default function TrackCharts({ trackData }) {
           trackData.instrumentalness,
           trackData.speechiness,
         ],
-        backgroundColor: [colors[2], colors[3], colors[5], colors[0]],
-        borderColor: "rgba(255,255,255,0.6)",
-        borderWidth: 1.5,
+        backgroundColor: [palette[2], palette[0], palette[5], palette[6]],
+        borderColor: border,
+        borderWidth: 2,
       },
     ],
   };
@@ -119,7 +97,7 @@ export default function TrackCharts({ trackData }) {
     ],
     datasets: [
       {
-        label: trackData.name,
+        label: trackData.title,
         data: [
           trackData.danceability,
           trackData.energy,
@@ -129,37 +107,26 @@ export default function TrackCharts({ trackData }) {
           trackData.valence,
           trackData.speechiness,
         ],
-        backgroundColor: colors,
-        borderColor: "rgba(255,255,255,0.4)",
-        borderWidth: 1.5,
+        backgroundColor: palette,
+        borderWidth: 0,
       },
     ],
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-        marginTop: 24,
-      }}
-    >
-      <div style={{ display: "flex", gap: 16 }}>
-        <div style={{ ...cardStyle, flex: 1, minWidth: 0 }}>
-          <h3 style={{ color: "white", marginTop: 0 }}>Rhythm</h3>
-          <PolarArea data={rhythmData} options={polarOptions} />
-        </div>
-        <div style={{ ...cardStyle, flex: 1, minWidth: 0 }}>
-          <h3 style={{ color: "white", marginTop: 0 }}>Mood</h3>
-          <Pie data={moodData} options={options} />
-        </div>
-      </div>
-
-      <div style={cardStyle}>
-        <h3 style={{ color: "white", marginTop: 0 }}>All Features</h3>
+    <div className="chart-grid">
+      <GlowCard>
+        <h3>Rhythm</h3>
+        <PolarArea data={rhythmData} options={polarOptions} />
+      </GlowCard>
+      <GlowCard>
+        <h3>Mood</h3>
+        <Pie data={moodData} options={{ plugins: legendBottom }} />
+      </GlowCard>
+      <GlowCard className="wide">
+        <h3>All features</h3>
         <Bar data={allData} options={barOptions} />
-      </div>
+      </GlowCard>
     </div>
   );
 }

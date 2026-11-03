@@ -1,30 +1,28 @@
-import logo from "../spotifyLogo.png";
+import logo from "../spotifyLogoNoWords.png";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function MyNavigation() {
   return (
-    <Navbar expand="lg" className="navbar">
-      <Container style={{ margin: "0" }}>
-        <Navbar.Brand>
-          <img
-            src={logo}
-            width="150"
-            className="d-inline-block align-top"
-            alt="Spotify Track Analysis Logo"
-            style={{ marginLeft: "50%" }}
-          />
+    <Navbar expand="lg" className="site-nav" variant="dark">
+      <Container fluid className="px-0">
+        <Navbar.Brand as={NavLink} to="/" className="brand">
+          <img src={logo} alt="Spotify Track Analysis logo" />
+          <div>
+            <span>Track Analysis</span>
+            <small>for Spotify</small>
+          </div>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
-            <Link to="/">Landing page</Link>
-            <Link to="/compare">Comparison page</Link>
-            <Link to="/timeline">Timeline page</Link>
+        <Navbar.Toggle aria-controls="main-nav" />
+        <Navbar.Collapse id="main-nav">
+          <Nav className="ms-auto gap-1 mt-3 mt-lg-0">
+            <Nav.Link as={NavLink} to="/" end>Home</Nav.Link>
+            <Nav.Link as={NavLink} to="/compare">Compare</Nav.Link>
+            <Nav.Link as={NavLink} to="/timeline">Timeline</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

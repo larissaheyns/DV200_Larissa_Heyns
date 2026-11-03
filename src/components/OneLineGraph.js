@@ -8,6 +8,8 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import GlowCard from "./GlowCard";
+import { featureColors, gridColor } from "./chartTheme";
 
 ChartJS.register(
   CategoryScale,
@@ -17,16 +19,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
-const featureColors = {
-  danceability: "rgba(54, 200, 235, 1)",
-  energy: "rgba(255, 99, 132, 1)",
-  acousticness: "rgba(120, 220, 140, 1)",
-  instrumentalness: "rgba(255, 206, 86, 1)",
-  liveness: "rgba(180, 120, 255, 1)",
-  valence: "rgba(255, 160, 64, 1)",
-  speechiness: "rgba(100, 180, 255, 1)",
-};
 
 export default function ArtistLineChart({ songs, trackDataMap }) {
   if (!songs || Object.keys(trackDataMap).length === 0) return null;
@@ -38,41 +30,29 @@ export default function ArtistLineChart({ songs, trackDataMap }) {
     label: feature.charAt(0).toUpperCase() + feature.slice(1),
     data: sorted.map((s) => trackDataMap[s.trackID]?.[feature] ?? null),
     borderColor: featureColors[feature],
-    backgroundColor: featureColors[feature].replace("1)", "0.1)"),
+    backgroundColor: featureColors[feature],
+    borderWidth: 2.5,
     tension: 0.4,
-    pointRadius: 5,
+    pointRadius: 4,
     pointHoverRadius: 7,
   }));
 
   const options = {
     responsive: true,
+    interaction: { mode: "index", intersect: false },
     plugins: {
-      legend: { labels: { color: "white", font: { size: 12 } } },
+      legend: { labels: { usePointStyle: true, padding: 18 } },
     },
     scales: {
-      x: {
-        ticks: { color: "white" },
-        grid: { color: "rgba(255,255,255,0.1)" },
-      },
-      y: {
-        ticks: { color: "white" },
-        grid: { color: "rgba(255,255,255,0.1)" },
-        min: 0,
-        max: 1,
-      },
+      x: { grid: { color: gridColor } },
+      y: { grid: { color: gridColor }, min: 0, max: 1 },
     },
   };
 
   return (
-    <div
-      style={{
-        background: "rgba(0,0,0,0.4)",
-        borderRadius: 16,
-        padding: 20,
-        marginTop: 24,
-      }}
-    >
+    <GlowCard>
+      <h3>Audio features over time</h3>
       <Line data={{ labels, datasets }} options={options} />
-    </div>
+    </GlowCard>
   );
 }

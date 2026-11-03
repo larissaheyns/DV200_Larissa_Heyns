@@ -108,7 +108,7 @@ export const artists = [
       {
         title: "Best I Ever Had",
         year: 2009,
-        trackID: "2p8IUWQDrpjuFltbdgLOag",
+        trackID: "best-i-ever-had",
       },
       { title: "Hotline Bling", year: 2015, trackID: "0wwPcA6wtMf6HUMpIRdeP7" },
       { title: "God's Plan", year: 2018, trackID: "6DCZcSspjsKoFjzjrWoCdn" },
@@ -121,7 +121,7 @@ export const artists = [
     name: "Ariana Grande",
     songs: [
       { title: "Problem", year: 2014, trackID: "2bCnHkB9wrWdCHWWSqJCsF" },
-      { title: "Into You", year: 2016, trackID: "5favorites3GwYVPxnPpBT" },
+      { title: "Into You", year: 2016, trackID: "into-you" },
       {
         title: "No Tears Left to Cry",
         year: 2018,
