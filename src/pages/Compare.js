@@ -2,83 +2,71 @@ import { useState } from "react";
 import { fetchTrackData } from "../components/api";
 import SongDropdown from "../components/dropdown";
 import TrackCharts from "../components/TrackCharts";
+import GlowCard from "../components/GlowCard";
 
-function Compare() {
-  const [trackData1, setTrackData1] = useState(null);
-  const [trackData2, setTrackData2] = useState(null);
-  const [loading1, setLoading1] = useState(false);
-  const [loading2, setLoading2] = useState(false);
+function TrackPanel({ label }) {
+  const [trackData, setTrackData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  async function handleSelect1(song) {
-    setLoading1(true);
+  async function handleSelect(song) {
+    setLoading(true);
     try {
-      const data = await fetchTrackData(song.trackID);
-      setTrackData1(data);
+      setTrackData(await fetchTrackData(song.id));
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading1(false);
-    }
-  }
-
-  async function handleSelect2(song) {
-    setLoading2(true);
-    try {
-      const data = await fetchTrackData(song.trackID);
-      setTrackData2(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading2(false);
+      setLoading(false);
     }
   }
 
   return (
-    <section className="gradient">
-      <br />
-      <h1 style={{ textAlign: "center" }}>Spotify Audio Features</h1>
-      <div style={{ display: "flex", gap: "4%", padding: "0 5% 5% 5%" }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <SongDropdown onSelect={handleSelect1} />
-          {loading1 && <p style={{ color: "white" }}>Loading...</p>}
-          {trackData1 && !loading1 && (
-            <div style={{ marginTop: 16 }}>
-              <img
-                src={trackData1.image}
-                alt={trackData1.name}
-                style={{
-                  width: 300,
-                  height: 300,
-                  borderRadius: 10,
-                  objectFit: "cover",
-                }}
-              />
-              <p style={{ color: "white" }}>{trackData1.name}</p>
-              <TrackCharts trackData={trackData1} />
-            </div>
-          )}
-        </div>
+    <div>
+      <GlowCard className="allow-overflow">
+        <h3>{label}</h3>
+        <SongDropdown onSelect={handleSelect} />
 
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <SongDropdown onSelect={handleSelect2} />
-          {loading2 && <p style={{ color: "white" }}>Loading...</p>}
-          {trackData2 && !loading2 && (
-            <div style={{ marginTop: 16 }}>
-              <img
-                src={trackData2.image}
-                alt={trackData2.name}
-                style={{
-                  width: 300,
-                  height: 300,
-                  borderRadius: 10,
-                  objectFit: "cover",
-                }}
-              />
-              <p style={{ color: "white" }}>{trackData2.name}</p>
-              <TrackCharts trackData={trackData2} />
+        {loading && <p className="loading">Loading…</p>}
+
+        {!trackData && !loading && (
+          <div className="empty-state">
+            <span className="big">🎧</span>
+            Pick a song to see its audio fingerprint
+          </div>
+        )}
+
+        {trackData && !loading && (
+          <div style={{ marginTop: 22 }}>
+            <div className="track-head">
+              <img src={trackData.image} alt={trackData.title} />
+              <div>
+                <h2>{trackData.title}</h2>
+                <p>{trackData.artist}</p>
+                <div className="chips">
+                  <span className="chip">{Math.round(trackData.tempo)} BPM</span>
+                  <span className="chip">
+                    {trackData.keyName} {trackData.mode ? "major" : "minor"}
+                  </span>
+                  <span className="chip">{trackData.loudness.toFixed(1)} dB</span>
+                </div>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </GlowCard>
+
+      {trackData && !loading && <TrackCharts trackData={trackData} />}
+    </div>
+  );
+}
+
+function Compare() {
+  return (
+    <section>
+      <h1 className="page-title">Spotify Audio Features</h1>
+      <p className="page-sub">Pick two songs and see how they stack up side by side.</p>
+      <div className="compare-grid">
+        <TrackPanel label="Song one" />
+        <TrackPanel label="Song two" />
       </div>
     </section>
   );

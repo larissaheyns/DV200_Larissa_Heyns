@@ -2,6 +2,7 @@ import { useState } from "react";
 import { fetchTrackData } from "../components/api";
 import ArtistDropdown from "../components/dropdownTimeline";
 import ArtistLineChart from "../components/OneLineGraph";
+import GlowCard from "../components/GlowCard";
 
 export default function Timeline() {
   const [selectedArtist, setSelectedArtist] = useState(null);
@@ -13,40 +14,60 @@ export default function Timeline() {
     setTrackDataMap({});
     setLoading(true);
 
-    for (const song of artist.songs) {
-      try {
-        const data = await fetchTrackData(song.trackID);
-        setTrackDataMap((prev) => ({ ...prev, [song.trackID]: data }));
-        await new Promise((res) => setTimeout(res, 1000)); // avoid rate limit
-      } catch (error) {
-        console.error("Failed to fetch", song.title, error);
-      }
-    }
+    const entries = await Promise.all(
+      artist.songs.map(async (song) => {
+        try {
+          return [song.trackID, await fetchTrackData(song.trackID)];
+        } catch (error) {
+          console.error("Failed to load", song.title, error);
+          return null;
+        }
+      }),
+    );
+
+    setTrackDataMap(Object.fromEntries(entries.filter(Boolean)));
     setLoading(false);
   }
 
+  const sortedSongs = selectedArtist
+    ? [...selectedArtist.songs].sort((a, b) => a.year - b.year)
+    : [];
+
   return (
-    <section
-      className="gradient"
-      style={{ minHeight: "100vh", padding: "5% 8%" }}
-    >
-      <h1 style={{ textAlign: "center", color: "white" }}>Artist Timeline</h1>
-      <h3 style={{ textAlign: "center" }}>
-        Choose one of the artists and see how they have developed over the years
-      </h3>
-      <ArtistDropdown onSelect={handleArtistSelect} />
+    <section>
+      <h1 className="page-title">Artist Timeline</h1>
+      <p className="page-sub">
+        Choose an artist and see how their sound has developed over the years.
+      </p>
 
-      {loading && (
-        <p style={{ color: "white", marginTop: 16 }}>
-          Loading songs... {Object.keys(trackDataMap).length}/
-          {selectedArtist?.songs.length}
-        </p>
-      )}
+      <div className="timeline-layout">
+        <GlowCard className="allow-overflow">
+          <h3>Artist</h3>
+          <ArtistDropdown onSelect={handleArtistSelect} />
 
-      <ArtistLineChart
-        songs={selectedArtist?.songs}
-        trackDataMap={trackDataMap}
-      />
+          {loading && <p className="loading">Loading songs…</p>}
+
+          {!selectedArtist && (
+            <div className="empty-state">
+              <span className="big">📈</span>
+              Select an artist to draw their timeline
+            </div>
+          )}
+
+          {selectedArtist && !loading && (
+            <div className="song-pills" style={{ marginTop: 18 }}>
+              {sortedSongs.map((s) => (
+                <span className="song-pill" key={s.trackID}>
+                  <b>{s.year}</b>
+                  {s.title}
+                </span>
+              ))}
+            </div>
+          )}
+        </GlowCard>
+
+        <ArtistLineChart songs={selectedArtist?.songs} trackDataMap={trackDataMap} />
+      </div>
     </section>
   );
 }
