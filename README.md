@@ -1,70 +1,170 @@
-# Getting Started with Create React App
+# 🎵 Music Application
+### Exploring Music Through Data
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive music exploration application built with React, designed to help users discover, compare and visualise musical characteristics through charts and artist timelines.
 
-## Available Scripts
+Developed as part of **DV200 — Interactive Development** at Open Window.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## ✨ About the Project
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The Music Application explores how data visualisation can make musical characteristics easier to understand.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Users can compare two songs, examine audio features such as danceability, energy and tempo, and explore how an artist's music has changed over time.
 
-### `npm test`
+The application combines a curated local music dataset with interactive React components and Chart.js visualisations.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🎧 Key Features
 
-### `npm run build`
+### Music Dashboard
+- Explore music through a visually distinctive interface.
+- View selected songs and their audio characteristics.
+- Navigate between the dashboard, comparison and timeline sections.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Song Comparison
+- Select two songs to compare.
+- View audio features through multiple chart types.
+- Update visualisations dynamically when different songs are selected.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Artist Timeline
+- Select an artist from the available collection.
+- Explore songs arranged by release year.
+- Visualise changes in musical characteristics over time.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Album Artwork
+- Retrieve available artwork using Spotify's public oEmbed endpoint.
+- Display generated fallback artwork when an image is unavailable.
 
-### `npm run eject`
+## 🛠️ Technologies Used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| Technology | Purpose |
+|---|---|
+| React | Component-based frontend development |
+| JavaScript | Application logic and interactions |
+| CSS | Styling, layout and visual effects |
+| React Router | Navigation between pages |
+| Chart.js | Data visualisation |
+| react-chartjs-2 | React integration for charts |
+| Bootstrap / React Bootstrap | Interface components and styling support |
+| Create React App | Project setup and development tooling |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📊 Data and API Integration
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The application originally explored using an external API to retrieve music audio-feature data.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+However, limitations involving API availability and pricing made this approach unsuitable for continued development.
 
-## Learn More
+To maintain the application's comparison and visualisation features, the project was adapted to use a **curated local dataset**.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The dataset is stored in `src/data/tracks.js` and contains audio-feature values used throughout the application.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Important:** The local audio-feature values are approximations for demonstration and visualisation purposes. They should not be treated as verified Spotify measurements.
 
-### Code Splitting
+For artwork, the application attempts to retrieve images through Spotify's public oEmbed endpoint. When an image cannot be retrieved, a generated fallback cover is displayed.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This approach reduces dependence on paid API services while preserving the application's core functionality.
 
-### Analyzing the Bundle Size
+## 📁 Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```text
+src/
+├── components/
+│   ├── api.js
+│   ├── TrackCharts.js
+│   ├── OneLineGraph.js
+│   ├── ArtistShowcase.js
+│   └── ...
+├── data/
+│   └── tracks.js
+├── pages/
+│   ├── Landing.js
+│   ├── Compare.js
+│   └── Timeline.js
+├── App.js
+└── App.css
+```
 
-### Making a Progressive Web App
+## 🚀 Getting Started
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Requirements
 
-### Advanced Configuration
+- Node.js
+- npm
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Installation
 
-### Deployment
+1. Clone the repository:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+git clone https://github.com/larissaheyns/DV200_Larissa_Heyns.git
+```
 
-### `npm run build` fails to minify
+2. Navigate to the project folder:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+cd DV200_Larissa_Heyns
+```
+
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+4. Start the development server:
+
+```bash
+npm start
+```
+
+5. Open `http://localhost:3000` in your browser.
+
+### Production Build
+
+```bash
+npm run build
+```
+
+This creates an optimised production build in the `build` folder.
+
+## 🧠 Challenges and Lessons Learned
+
+### API Limitations
+
+One of the biggest challenges was adapting the project after encountering limitations with the original music API.
+
+This taught me to consider API reliability, pricing and long-term availability when planning an application.
+
+### Interactive Data Visualisation
+
+Building the comparison and timeline features helped me understand how React state and Chart.js can work together to update visualisations based on user selections.
+
+### Application Structure
+
+Separating data retrieval, chart components and individual pages helped me develop a better understanding of reusable components and application organisation.
+
+## 🔮 Future Improvements
+
+- Expand the available music and artist dataset.
+- Improve search and filtering functionality.
+- Explore reliable alternatives for retrieving verified audio-feature data.
+- Refine responsiveness and accessibility.
+- Introduce additional interactive music visualisations.
+
+## 🌐 Repository
+
+[View the Music Application on GitHub](https://github.com/larissaheyns/DV200_Larissa_Heyns)
+
+## 👩‍💻 Developer
+
+**Larissa Heyns**
+
+DV200 — Interactive Development  
+Open Window
+
+[GitHub Profile](https://github.com/larissaheyns)
+
+---
+
+*Exploring the connection between music, data and interactive development.*
